@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Three.js Perspective Camera Demo - Near Far</title>
+  <style>
+    body { margin: 0; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/three@0.130.0/build/three.min.js"></script>
+<script>
+  // 创建场景
+  const scene = new THREE.Scene();
+
+  // 创建透视摄像机
+  const camera = new THREE.PerspectiveCamera(
+          75, // 视野角度
+          window.innerWidth / window.innerHeight, // 宽高比
+          1, // 近裁剪面
+          100 // 远裁剪面
+  );
+
+  // 设置摄像机位置
+  camera.position.z = 10;
+
+  // 创建渲染器
+  const renderer = new THREE.WebGLRenderer();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
+
+  // 创建立方体
+  const geometry = new THREE.BoxGeometry();
+  const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+  const cube = new THREE.Mesh(geometry, material);
+  scene.add(cube);
+
+  // 渲染场景
+  function animate() {
+    requestAnimationFrame(animate);
+
+    // 改变摄像机的远近裁剪面
+    const time = Date.now() * 0.001;
+    camera.near = Math.sin(time) * 5 + 5;
+    camera.far = Math.sin(time) * 5 + 15;
+    camera.updateProjectionMatrix();
+
+    // 旋转立方体
+    cube.rotation.x += 0.01;
+    cube.rotation.y += 0.01;
+
+    renderer.render(scene, camera);
+  }
+
+  animate();
+</script>
+</body>
+</html>
